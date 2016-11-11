@@ -1,6 +1,7 @@
 package com.example.jessemaynard.peoplemon.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.jessemaynard.peoplemon.Components.Utils;
 import com.example.jessemaynard.peoplemon.Models.User;
 import com.example.jessemaynard.peoplemon.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,10 +44,9 @@ public class PeopleNearbyAdapter extends RecyclerView.Adapter<PeopleNearbyAdapte
     @Override
     public void onBindViewHolder(UserHolder holder, int position) {
 
-        if (position < users.size()) {
-            User user = users.get(position);
-            holder.bindUser(user);
-        }
+        final User near = users.get(position);
+        holder.bindUser(near);
+
     }
 
     @Override
@@ -54,8 +57,8 @@ public class PeopleNearbyAdapter extends RecyclerView.Adapter<PeopleNearbyAdapte
 
     class UserHolder extends RecyclerView.ViewHolder {
 
-//        @Bind(R.id.nearby_avatar)
-//        ImageView nearbyAvatar;
+        @Bind(R.id.nearby_avatar)
+        ImageView nearbyAvatar;
 
         @Bind(R.id.nearby_username)
         TextView nearbyUsername;
@@ -68,7 +71,18 @@ public class PeopleNearbyAdapter extends RecyclerView.Adapter<PeopleNearbyAdapte
         // Adds the data to the view.
         public void bindUser(User user) {
             // Set the username of the nearby people.
+            DecimalFormat decfor = new DecimalFormat("0.00");
+
             nearbyUsername.setText(user.getUsername());
+
+            Bitmap userAvatar = Utils.decodeImage(user.getAvatar());
+            if (userAvatar == null){
+                nearbyAvatar.setImageDrawable(context.getResources().getDrawable(R.mipmap.ic_launcher));
+            } else {
+                nearbyAvatar.setImageBitmap(userAvatar);
+            }
+
+            Collections.sort(users);
         }
     }
 }

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by jessemaynard on 11/9/16.
  */
 
-public class User {
+public class User implements Comparable<User>{
 
     @SerializedName("UserId")
     private String id;
@@ -14,7 +14,7 @@ public class User {
     @SerializedName("UserName")
     private String username;
 
-    @SerializedName("avatarBase64")
+    @SerializedName("AvatarBase64")
     private String avatar;
 
     @SerializedName("Longitude")
@@ -30,7 +30,7 @@ public class User {
     private String caughtUserId;
 
     @SerializedName("RadiusInMeters")
-    private int radiusInMeter;
+    private Float radiusInMeter;
 
     public User() {
     }
@@ -40,7 +40,7 @@ public class User {
         this.latitude = latitude;
     }
 
-    public User(String UserId, int radiusInMeter) {
+    public User(String UserId, Float radiusInMeter) {
         this.caughtUserId = UserId;
         this.radiusInMeter = radiusInMeter;
     }
@@ -50,6 +50,11 @@ public class User {
         this.username = username;
         this.caughtUserId = created;
         this.avatar = avatar;
+    }
+
+    @Override
+    public int compareTo(User user) {
+        return 0;
     }
 
     public String getUsername() {
@@ -112,7 +117,7 @@ public class User {
         return radiusInMeter;
     }
 
-    public void setRadiusInMeter(int radiusInMeter) {
+    public void setRadiusInMeter(Float radiusInMeter) {
         this.radiusInMeter = radiusInMeter;
     }
 }
