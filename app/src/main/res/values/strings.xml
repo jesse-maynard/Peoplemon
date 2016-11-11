@@ -8,4 +8,9 @@
     <string name="full_name">Full Name</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="get_info_error">Error Getting User Info</string>
+    <string name="user_changed">Username Successfully Changed</string>
+    <string name="new_username">New Username</string>
+    <string name="select_avatar">Select Avatar</string>
+    <string name="submit">Submit</string>
+    <string name="submit_username">Submit Username</string>
 </resources>

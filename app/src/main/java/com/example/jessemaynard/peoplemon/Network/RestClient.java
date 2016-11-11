@@ -24,7 +24,7 @@ public class RestClient {
         Gson gson = builder.create();
 
         HttpLoggingInterceptor log = new HttpLoggingInterceptor();
-        log.setLevel(HttpLoggingInterceptor.Level.BODY);
+        log.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(new SessionRequestInterceptor()).addInterceptor(log).build();

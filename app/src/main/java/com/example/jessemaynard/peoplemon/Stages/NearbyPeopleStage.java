@@ -7,25 +7,24 @@ import com.example.jessemaynard.peoplemon.R;
 import com.example.jessemaynard.peoplemon.Riggers.SlideRigger;
 
 /**
- * Created by jessemaynard on 11/7/16.
+ * Created by jessemaynard on 11/11/16.
  */
 
-public class PeopleMonMapStage extends IndexedStage {
-
+public class NearbyPeopleStage extends IndexedStage {
     private final SlideRigger rigger;
 
-    public PeopleMonMapStage(Application context) {
+    public NearbyPeopleStage(Application context) {
         super(PeopleMonMapStage.class.getName());
         this.rigger = new SlideRigger(context);
     }
 
-    public PeopleMonMapStage() {
+    public NearbyPeopleStage() {
         this(PeopleMonApplication.getInstance());
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.peoplemon_map_view;
+        return R.layout.nearby_users_view;
     }
 
     @Override

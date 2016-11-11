@@ -13,7 +13,7 @@ import static com.example.jessemaynard.peoplemon.Components.Constants.grantType;
 public class Account {
 
 
-    @SerializedName("email")
+    @SerializedName("Email")
     private String email;
 
     @SerializedName("FullName")

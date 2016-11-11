@@ -126,18 +126,18 @@ public class MainActivity extends AppCompatActivity {
                 String imageString = cursor.getString(columnIndex);
                 cursor.close();
 
-                //Convert to Bitmap Array
-                Bitmap bm = BitmapFactory.decodeFile(imageString);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-                byte[] b = baos.toByteArray();
+//                //Convert to Bitmap Array
+//                Bitmap bm = BitmapFactory.decodeFile(imageString);
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+//                byte[] b = baos.toByteArray();
+//
+//                //Take the bitmap Array and e
+//                // encode it to Base64
+//                String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
 
-                //Take the bitmap Array and e
-                // encode it to Base64
-                String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-
-                Log.d("***BASE64****", encodedImage);
-                makeApiCallForProfile(encodedImage);
+//                Log.d("***BASE64****", encodedImage);
+//                makeApiCallForProfile(encodedImage);
 
                 //Make API Call to Send Base64 to Server
 
@@ -154,28 +154,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void makeApiCallForProfile(String imageString){
-
-        Account user = new Account(null, avatar);
-        RestClient restClient = new RestClient();
-        restClient.getApiService().postInfo(user).enqueue(new Callback<Void>() {
-
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                // Is the server response between 200 to 299
-                if (response.isSuccessful()){
-
-
-
-                }else{
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-            }
-        });
-    }
+//    private void makeApiCallForProfile(String imageString){
+//        avatar = imageString;
+//        Account user = new Account(null, avatar);
+//        RestClient restClient = new RestClient();
+//        restClient.getApiService().postInfo(user).enqueue(new Callback<Void>() {
+//
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                // Is the server response between 200 to 299
+//                if (response.isSuccessful()){
+//
+//
+//                }else{
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//            }
+//        });
+//    }
 
     @Override
     public void onBackPressed() {

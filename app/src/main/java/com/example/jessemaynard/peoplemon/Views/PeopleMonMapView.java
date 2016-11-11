@@ -23,6 +23,7 @@ import com.example.jessemaynard.peoplemon.Network.RestClient;
 import com.example.jessemaynard.peoplemon.PeopleMonApplication;
 import com.example.jessemaynard.peoplemon.R;
 import com.example.jessemaynard.peoplemon.Stages.AccountStage;
+import com.example.jessemaynard.peoplemon.Stages.NearbyPeopleStage;
 import com.example.jessemaynard.peoplemon.Stages.PeopleMonStage;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -181,7 +182,7 @@ public class PeopleMonMapView extends RelativeLayout implements OnMapReadyCallba
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
 
         final Circle circle = gMap.addCircle(new CircleOptions().center(latLng)
-                .strokeColor(Color.RED).radius(1000));
+                .strokeColor(Color.MAGENTA).radius(500));
 
         ValueAnimator valAnim = new ValueAnimator();
         valAnim.setRepeatCount(ValueAnimator.INFINITE);
@@ -238,7 +239,6 @@ public class PeopleMonMapView extends RelativeLayout implements OnMapReadyCallba
 
     @OnClick(R.id.peoplemon_list_button)
     public void peoplemonTapped(){
-        //TODO, Link this to the peoplemon modal.
         Flow flow = PeopleMonApplication.getMainFlow();
         History newHistory = flow.getHistory().buildUpon().push(new PeopleMonStage()).build();
 
@@ -248,6 +248,10 @@ public class PeopleMonMapView extends RelativeLayout implements OnMapReadyCallba
     @OnClick(R.id.radar_button)
     public void radarTapped(){
         //TODO, Link this to the radar modal.
+        Flow flow = PeopleMonApplication.getMainFlow();
+        History newHistory = flow.getHistory().buildUpon().push(new NearbyPeopleStage()).build();
+
+        flow.setHistory(newHistory, Flow.Direction.FORWARD);
     }
 
     public void checkIn(){
@@ -257,7 +261,6 @@ public class PeopleMonMapView extends RelativeLayout implements OnMapReadyCallba
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()){
-//                    Toast.makeText(context, "Check-In Success", Toast.LENGTH_LONG).show();
 
                     nearby();
                 } else {
@@ -273,7 +276,7 @@ public class PeopleMonMapView extends RelativeLayout implements OnMapReadyCallba
     }
 
     public void nearby() {
-        restClient.getApiService().nearby(100).enqueue(new Callback<User[]>() {
+        restClient.getApiService().nearby(500).enqueue(new Callback<User[]>() {
             @Override
             public void onResponse(Call<User[]> call, Response<User[]> response) {
                 if (response.isSuccessful()) {
@@ -317,14 +320,14 @@ public class PeopleMonMapView extends RelativeLayout implements OnMapReadyCallba
                     Toast.makeText(context, name, Toast.LENGTH_SHORT).show();
                     caught();
                 } else {
-                    Toast.makeText(context, "Making something happen" + ": " + id, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, name + " Is Too Far Away", Toast.LENGTH_SHORT).show();
 
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(context, "Making something happen", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Can't Catch User : Too Far Away", Toast.LENGTH_SHORT).show();
             }
         });
     }

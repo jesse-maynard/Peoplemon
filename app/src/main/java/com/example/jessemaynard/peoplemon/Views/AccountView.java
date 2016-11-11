@@ -18,12 +18,15 @@ import android.widget.Toast;
 import com.example.jessemaynard.peoplemon.MainActivity;
 import com.example.jessemaynard.peoplemon.Models.Account;
 import com.example.jessemaynard.peoplemon.Models.ImageLoadedEvent;
+import com.example.jessemaynard.peoplemon.Models.ImageSized;
 import com.example.jessemaynard.peoplemon.Network.RestClient;
 import com.example.jessemaynard.peoplemon.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.ByteArrayOutputStream;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,6 +55,7 @@ public class AccountView extends RelativeLayout {
 
     private String selectedImage;
     public Bitmap scaledImage;
+    public Bitmap origImage;
 
     public AccountView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -100,7 +104,7 @@ public class AccountView extends RelativeLayout {
                     if (response.isSuccessful()){
                         // After posting the info to the server return it with the profile api call.
                             makeApiCallForProfile();
-                            Toast.makeText(context,"Username Successfully Changed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, R.string.user_changed, Toast.LENGTH_LONG).show();
 
                     }else{
 
@@ -136,14 +140,14 @@ public class AccountView extends RelativeLayout {
                             Log.d("--Username--: ", authUser.getFullname());
                             Log.d("--E-mail Address--: ",authUser.getEmail());
                             Log.d("--Avatar--: ",authUser.getAvatar());
-                        // Convert the image into base64.
+                        // Get the image back from the server and decode it.
                             String encodedImage = authUser.getAvatar();
                             byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
-                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            origImage = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                         // Set the Username, E-mail and user Avatar based on what is returned from the server.
                             userName.setText(authUser.getFullname());
                             emailAddress.setText(authUser.getEmail());
-                            profileAvatar.setImageBitmap(decodedByte);
+                            profileAvatar.setImageBitmap(origImage);
 
                 }else{
                     resetView();
@@ -163,4 +167,60 @@ public class AccountView extends RelativeLayout {
         EventBus.getDefault().unregister(this);
         super.onDetachedFromWindow();
     }
+
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void imageLoaded(ImageLoadedEvent event){
+        selectedImage = event.selectedImage;
+        int width = profileAvatar.getWidth();
+        int height = profileAvatar.getHeight();
+
+        Bitmap image = BitmapFactory.decodeFile(selectedImage);
+
+        float ratio = (float)image.getWidth() / (float)image.getHeight();
+        if (ratio > 1){
+            height = (int)(width / ratio);
+        } else {
+            width = (int)(height * ratio);
+        }
+
+        scaledImage = Bitmap.createScaledBitmap(image, width, height, true);
+        EventBus.getDefault().post(new ImageSized());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void imageReady(ImageSized event){
+        ImageView imageView = new ImageView(context);
+        imageView.setImageBitmap(scaledImage);
+
+        //Convert to Bitmap Array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            scaledImage.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+            byte[] b = baos.toByteArray();
+
+        // Encode the Bitmap Array into base64.
+            String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+            makeApiCallForProfile(encodedImage);
+    }
+
+    private void makeApiCallForProfile(String imageString){
+         String avatar = imageString;
+        Account user = new Account(null, avatar);
+        RestClient restClient = new RestClient();
+        restClient.getApiService().postInfo(user).enqueue(new Callback<Void>() {
+
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()){
+
+
+                }else{
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+            }
+        });
+    }
+
 }
