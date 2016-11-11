@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">PeopleMon</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="username">E-mail</string>
+    <string name="e_mail_address">E-mail Address</string>
+    <string name="full_name">Full Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="get_info_error">Error Getting User Info</string>
+</resources>
